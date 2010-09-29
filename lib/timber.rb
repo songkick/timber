@@ -2,6 +2,7 @@ $:.push(File.expand_path(File.dirname(__FILE__)))
 
 require 'timber/helpers'
 
+require 'timber/file_stream'
 require 'timber/grouping'
 require 'timber/remote_log_parser'
 require 'timber/remote_executor'

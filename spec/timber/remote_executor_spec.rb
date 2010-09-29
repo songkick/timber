@@ -7,15 +7,13 @@ describe Timber::RemoteExecutor do
   end
     
   describe "executing ssh commands" do
-    
     it "should execute commands and return the result" do
-      @executor.ssh("ls #{fixtures_dir}").should == "bar.log\nfoo.log\n"
+      @executor.ssh("ls #{fixtures_dir}/").should == "bar.log\nfoo.log\nzipped.log.gz\n"
     end
     
     it "should escape the commands" do
       @executor.ssh("ruby -e \"p :foo\"").should == ":foo\n"
     end  
-    
   end
   
   describe "executing ruby" do
