@@ -17,17 +17,17 @@ module Timber
       @files ||= executor.ssh("ls #{file_glob}").split("\n")
     end
     
-    def grep(pattern)
+    def grep(pattern, options=nil)
+      options ||= {}
+      limit = options.delete(:limit)
       bin = all_zipped_files? ? "zgrep" : "grep"
-      if parsed_original_files?
-        source_files     = file_stream.current
-        destination_file = file_stream.next_file
+      source_files, destination_file = source_and_destination
+      if limit
+        cmd = "#{bin} \"#{pattern}\" #{source_files} | head -n #{limit} > #{destination_file} || echo done"
       else
-        source_files     = file_glob
-        destination_file = file_stream.next_file
+        cmd = "#{bin} \"#{pattern}\" #{source_files} > #{destination_file} || echo done"
       end
-      grep_cmd = "#{bin} \"#{pattern}\" #{source_files} > #{destination_file} || echo done"
-      executor.ssh(grep_cmd)
+      executor.ssh(cmd)
     end
     
     def parsed_original_files?
@@ -43,6 +43,14 @@ module Timber
     end
     
     private
+    
+    def source_and_destination
+      if parsed_original_files?
+        return file_stream.current, file_stream.next_file
+      else
+        return file_glob,           file_stream.next_file
+      end
+    end
     
     def executor
       @executor ||= RemoteExecutor.new(server)

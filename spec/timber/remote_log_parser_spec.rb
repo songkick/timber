@@ -26,6 +26,10 @@ describe Timber::RemoteLogParser do
       @remote_log_parser.file_stream.length.should == 3
     end
     
+    it "should let you limit the grep" do
+      @remote_log_parser.grep("Completed", :limit => 2)
+      @remote_log_parser.file_stream.length.should == 2
+    end
     it "should let you grep the generated files" do
       @remote_log_parser.grep("Random")
       @remote_log_parser.grep("ian")
