@@ -20,7 +20,7 @@ describe Timber::RemoteLogParser do
     }.should raise_error
   end
   
-  describe "logfile reduction" do
+  describe "logfile grepping" do
     it "should let you grep the original log files" do
       @remote_log_parser.grep("Completed")
       @remote_log_parser.file_stream.length.should == 3
@@ -30,6 +30,7 @@ describe Timber::RemoteLogParser do
       @remote_log_parser.grep("Completed", :limit => 2)
       @remote_log_parser.file_stream.length.should == 2
     end
+    
     it "should let you grep the generated files" do
       @remote_log_parser.grep("Random")
       @remote_log_parser.grep("ian")
@@ -42,4 +43,18 @@ describe Timber::RemoteLogParser do
       @remote_log_parser.file_stream.length.should == 1
     end
   end
+  
+  describe "extraction" do
+    it "should let you extract regex groups into a local table" do
+      @remote_log_parser.grep("Completed")
+      table = @remote_log_parser.extract(/Completed in (\d+)ms/, [:duration_ms], working_dir)
+      table.should be_an_instance_of(Timber::Table)
+      table.column_names.should == [:duration_ms]
+      table.to_a.should == [["52"], ["856"], ["235"]]
+    end
+  end
 end
+
+
+
+

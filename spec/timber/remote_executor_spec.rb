@@ -16,6 +16,20 @@ describe Timber::RemoteExecutor do
     end  
   end
   
+  describe "executing ssh commands and collecting results" do
+    it "should execute commands and return the result" do
+      fn = working_dir + "/output1.log"
+      @executor.ssh_into("ls #{fixtures_dir}/", fn)
+      File.read(fn).should == "bar.log\nfoo.log\nzipped.log.gz\n"
+    end
+    
+    it "should execute commands and return the result" do
+      fn = working_dir + "/output1.log"
+      @executor.ruby_into("p :foo", fn)
+      File.read(fn).should == ":foo\n"
+    end
+  end
+
   describe "executing ruby" do
     it "should execute commands and return the result" do
       @executor.ruby("p :foo").should == ":foo\n"

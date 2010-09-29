@@ -1,4 +1,4 @@
-Sep 12 13:12 Completed in 52ms (http://www.songkick.com/users/danlucraft)
+Sep 12 13:12 Completed in 52ms [controller:users | action:show] (http://www.songkick.com/users/danlucraft)
 Sep 12 13:15 Random log line
-Sep 12 13:20 Completed in 856ms (http://www.songkick.com/users/ian)
-Sep 13 09:00 Completed in 235ms (http://www.songkick.com/users/phil)
+Sep 12 13:20 Completed in 856ms [controller:artists | action:show] (http://www.songkick.com/artist/sonic-youth)
+Sep 13 09:00 Completed in 235ms [controller:venues | action:show] (http://www.songkick.com/venue/o2-academy)
