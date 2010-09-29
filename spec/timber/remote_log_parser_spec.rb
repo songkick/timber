@@ -23,7 +23,7 @@ describe Timber::RemoteLogParser do
   describe "logfile grepping" do
     it "should let you grep the original log files" do
       @remote_log_parser.grep("Completed")
-      @remote_log_parser.file_stream.length.should == 3
+      @remote_log_parser.file_stream.length.should == 4
     end
     
     it "should let you limit the grep" do
@@ -50,7 +50,7 @@ describe Timber::RemoteLogParser do
       table = @remote_log_parser.extract(/Completed in (\d+)ms/, [:duration_ms], working_dir)
       table.should be_an_instance_of(Timber::Table)
       table.column_names.should == [:duration_ms]
-      table.to_a.should == [["52"], ["856"], ["235"]]
+      table.to_a.should == [["52"], ["856"], ["235"], ["235"]]
     end
   end
 end

@@ -13,7 +13,7 @@ describe Timber::FileStream do
   describe "file properties" do
     it "should tell you the line length of a file" do
       @stream.force_current(fixtures_dir + "/foo.log")
-      @stream.length.should == 4
+      @stream.length.should == 5
     end
     
     it "assert_non_empty should raise an error for an empty file" do

@@ -136,7 +136,7 @@ module Timber
         source = file_stream.current
         each_row_from(source) do |row|
           key = yield row
-          group.file(key).puts line
+          group.file(key).puts row.join(",")
         end
         group.close
         group
