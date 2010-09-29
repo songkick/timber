@@ -1,0 +1,2 @@
+To run specs you must set up the authorized_keys so that the user the specs are running as can shell
+into localhost without a password.

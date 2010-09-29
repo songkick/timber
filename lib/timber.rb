@@ -1,12 +1,15 @@
 $:.push(File.expand_path(File.dirname(__FILE__)))
 
-require 'timber/file_helpers'
+require 'timber/helpers'
 
 require 'timber/grouping'
 require 'timber/remote_log_parser'
+require 'timber/remote_executor'
 require 'timber/table'
 
 module Timber
-  
+  def self.debug?
+    ENV["DEBUG"]
+  end
 end
 
