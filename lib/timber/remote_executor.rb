@@ -1,9 +1,11 @@
 
 module Timber
   class RemoteExecutor
-    include Helpers
+    attr_reader :server
     
-    attr_reader :server, :user
+    class << self
+      attr_accessor :remote_user
+    end
     
     def initialize(server)
       @server = server
@@ -58,7 +60,7 @@ module Timber
     end
         
     def remote_user
-      Etc.getlogin
+      RemoteExecutor.remote_user || Etc.getlogin
     end
   end
 end
