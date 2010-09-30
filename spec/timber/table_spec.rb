@@ -69,6 +69,12 @@ describe Timber::Table do
     grouping.should be_an_instance_of(Timber::Grouping)
     grouping.keys.should == [0, 1]
   end
+  
+  it "should let you group by all distinct values of a subset of the columns" do
+    grouping = @table.group_by ...
+    grouping.should be_an_instance_of(Timber::Grouping)
+    grouping.keys.should == [0, 1]
+  end
 end
 
 
