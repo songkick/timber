@@ -9,6 +9,8 @@ require 'timber/remote_executor'
 require 'timber/table'
 
 module Timber
+  VERSION = "0.1.0"
+  
   def self.debug?
     ENV["DEBUG"]
   end
