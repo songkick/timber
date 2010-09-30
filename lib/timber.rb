@@ -1,5 +1,6 @@
 $:.push(File.expand_path(File.dirname(__FILE__)))
 
+require 'timber/aggregate_report'
 require 'timber/file_stream'
 require 'timber/grouping'
 require 'timber/remote_log_parser'
