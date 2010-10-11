@@ -26,7 +26,7 @@ describe Timber::AggregateReport do
           [:mean      , "Mean (ms)"],
           [:median    , "Median (ms)"],
           [:deviation , "Deviation (ms)"],
-          [:total_time, "Total time (ms)"],
+          [:total,      "Total time (ms)"],
           [:apdex     , "Apdex"]
         ]
       ).generate
@@ -41,11 +41,11 @@ describe Timber::AggregateReport do
     end
     
     it "the csv file should contain the correct data" do
-      File.readlines(csv_filename).map {|line| line.chomp.split(",")}.should == [
+      File.readlines(csv_filename).map {|line| line.chomp.split(",")}.sort.should == [
+        ["artists", "show", "1", "856.0", "856.0", "0.0", "856"],
         ["controller", "action", "Count", "Mean (ms)", "Median (ms)", "Deviation (ms)", "Total time (ms)", "Apdex"],
-        ["users", "show", "1", "52"],
-        ["venues", "show", "2", "235"],
-        ["artists", "show", "1", "856"]
+        ["users", "show", "1", "52.0", "52.0", "0.0", "52"],
+        ["venues", "show", "2", "235.0", "235.0", "0.0", "470"]
       ]
     end
   end

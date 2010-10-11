@@ -28,6 +28,10 @@ module Timber
       end
     end
     
+    def set_column_types(types)
+      @tables.values.each {|t| t.set_types(types)}
+    end
+    
     def each
       keys.each do |key|
         yield key, table(key)

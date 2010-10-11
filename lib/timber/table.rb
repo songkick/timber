@@ -103,11 +103,11 @@ module Timber
       rows.map {|value, row| row}
     end
     
-    def sub_table(options={})
+    def sub_table(options=nil)
       source = file_stream.current
       new_file_stream = FileStream.new(executor, file_stream.working_dir)
       next_file = new_file_stream.next_file
-      if columns = options[:columns]
+      if options and columns = options[:columns]
         ixes = columns.map {|col| column_ix(col) }
         File.open(next_file, "w") do |fout|
           each_row_from(source) do |row|
@@ -116,21 +116,24 @@ module Timber
             fout.puts new_bits.join(",")
           end
         end
+        new_column_types = []
+        ixes.each {|ix| new_column_types << column_types[ix]}
       elsif block_given?
         File.open(next_file, "w") do |fout|
           each_row_from(source) do |row|
             fout.puts row.join(",") if yield(row)
           end
         end
+        new_column_types = column_types
       else
         raise "sub_table needs :columns or a predicate block"
       end
       new_table = Table.new(new_file_stream, column_names)
-      new_table.set_types(column_types)
+      new_table.set_types(new_column_types)
       new_table
     end
     
-    def group_by
+    def group_by(options=nil)
       if block_given?
         group = Grouping.new(column_names, file_stream.working_dir)
         source = file_stream.current
@@ -139,9 +142,24 @@ module Timber
           group.file(key).puts row.join(",")
         end
         group.close
+        group.set_column_types(column_types)
         group
-      elsif
-        raise "Timber::Table#group_by requires a block"
+      elsif options and options.is_a?(Hash) and columns = options[:columns]
+        group = Grouping.new(column_names, file_stream.working_dir)
+        column_table = sub_table(:columns => columns)
+        column_table.uniq
+        distinct_values = column_table.to_a
+        ixes = columns.map {|col| column_ix(col) }
+        source = file_stream.current
+        each_row_from(source) do |row|
+          key = ixes.map {|ix| row[ix]}
+          group.file(key).puts row.join(",")
+        end
+        group.close
+        group.set_column_types(column_types)
+        group
+      else
+        raise "Timber::Table#group_by requires a block or :columns option"
       end
     end
     

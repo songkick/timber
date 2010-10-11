@@ -71,11 +71,19 @@ describe Timber::Table do
   end
   
   it "should let you group by all distinct values of a subset of the columns" do
-    grouping = @table.group_by ...
+    grouping = @table.group_by(:columns => [:controller, :action])
     grouping.should be_an_instance_of(Timber::Grouping)
-    grouping.keys.should == [0, 1]
+    grouping.keys.sort.should == [["artists", "show"], ["users", "show"], ["venues", "show"]]
+    grouping.table(["venues", "show"]).to_a.should == [
+      ["Sep 13 09:00", 235, "venues", "show", "http://www.songkick.com/venue/o2-academy"],
+      ["Sep 13 09:00", 235, "venues", "show", "http://www.songkick.com/venue/o2-academy"]
+    ]
   end
 end
+
+
+
+
 
 
 

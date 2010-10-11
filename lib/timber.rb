@@ -6,6 +6,7 @@ require 'timber/grouping'
 require 'timber/remote_log_parser'
 require 'timber/remote_executor'
 require 'timber/table'
+require 'timber/stats'
 
 module Timber
   VERSION = "0.1.0"
