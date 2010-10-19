@@ -46,6 +46,8 @@ HTML
       end
       filename = @dir +"/" + @file + ".csv"
       generate_csv(filename)
+      filename = @dir +"/" + @file + ".html"
+      generate_html(filename)
     end
     
     def generate_csv(filename)
@@ -55,9 +57,22 @@ HTML
     def generate_html(filename)
       str = ""
       str << HTML_PREAMBLE
-      str << "<h3>#{title}</h3>"
-      str << output_table.sort_rows_by("total time (#{units})", :order => :descending).to_html
+      str << "<h3>#{@name}</h3><br />\n"
+      str << "<table>\n"
+      output_table.each_with_index do |row, row_i|
+        str << "<tr>"
+        row.each_with_index do |bit, i|
+          if row_i == 0
+            str << "<td>#{bit}</td>\n"
+          else
+            str << "<td>#{value_to_string(bit, i)}</td>\n"
+          end
+        end
+        str << "</tr>\n"
+      end
+      str << "</table>"
       str << HTML_POSTAMBLE
+      File.open(filename, "w") {|fout| fout.puts(str) }
     end
     
     def output_table
@@ -82,7 +97,7 @@ HTML
             v
           end.reverse
         end
-        row = [["(all)"]*@key.length]
+        row = [["(all)"]*@key.length].flatten
         @generate_columns.each do |column_value_type, _|
           r = generate_value_from_table(@table, column_value_type)
           row << r
@@ -145,8 +160,50 @@ HTML
           num_under_4n += 1
         end
       end
-      (num_under_n.to_f + 0.5*num_under_4n.to_f)/values.length
+      (num_under_n.to_f + 0.5*num_under_4n.to_f)*100/values.length
     end
     
+    def value_to_string(value, column_ix)
+      if column_ix <= @key.length
+        value
+      else
+        column_value_type = @generate_columns[column_ix - @key.length].first
+        column_type = @table.type_of_column(@value_column)
+        new_type = column_value_type_to_type(column_value_type) || column_type
+        result = Table.cast_value(value, new_type)
+        result
+      end
+    end
+    
+    def column_value_type_to_type(column_value_type)
+      case column_value_type
+      when :count
+        :int
+      when :total
+        nil
+      when :min
+        nil
+      when :max
+        nil
+      when :mean
+        nil
+      when :mode
+        nil
+      when :median
+        nil
+      when :lower_quartile
+        nil
+      when :upper_quartile
+        nil
+      when :deviation
+        nil
+      when :variance
+        nil
+      when :apdex_ms
+        :int
+      when :apdex_s
+        :int
+      end
+    end
   end
 end

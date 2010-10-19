@@ -12,6 +12,11 @@ module Timber
       @column_types = column_types
     end
     
+    def type_of_column(name)
+      ix = column_ix(name)
+      @column_types[ix]
+    end
+    
     def current_file
       @file_stream.current
     end
