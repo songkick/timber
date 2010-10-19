@@ -42,6 +42,7 @@ describe Timber::AggregateReport do
     
     it "the csv file should contain the correct data" do
       File.readlines(csv_filename).map {|line| line.chomp.split(",")}.sort.should == [
+        ["(all)", "(all)", "4", "344.5", "235.0", "304.618203658284", "1378", "0.875"],
         ["artists", "show", "1", "856.0", "856.0", "0.0", "856", "0.5"],
         ["controller", "action", "Count", "Mean (ms)", "Median (ms)", "Deviation (ms)", "Total time (ms)", "Apdex"],
         ["users", "show", "1", "52.0", "52.0", "0.0", "52", "1.0"],

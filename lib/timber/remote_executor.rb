@@ -5,6 +5,7 @@ module Timber
     
     class << self
       attr_accessor :remote_user
+      attr_accessor :local_user
     end
     
     def initialize(server)
@@ -36,7 +37,7 @@ module Timber
     end
     
     def scp(from, to)
-      scp_cmd = "scp #{remote_user}@#{server}:#{from} #{to}"
+      scp_cmd = "scp #{user}@#{server}:#{from} #{to}"
       puts "[scp] #{scp_cmd}" if Timber.debug?
       bash(scp_cmd)
     end
@@ -48,7 +49,7 @@ module Timber
     end
     
     def ssh_cmd(cmd)
-      "ssh #{remote_user}@#{server} \"nice #{escaped_cmd(cmd)}\""
+      "ssh #{user}@#{server} \"nice #{escaped_cmd(cmd)}\""
     end
     
     def escaped_cmd(cmd)
@@ -59,8 +60,12 @@ module Timber
       "nice ruby -e \"#{escape_quotes(ruby)}\""
     end
         
-    def remote_user
-      RemoteExecutor.remote_user || Etc.getlogin
+    def user
+      if @server =~ /localhost/
+        RemoteExecutor.local_user || Etc.getlogin
+      else
+        RemoteExecutor.remote_user || Etc.getlogin
+      end
     end
   end
 end

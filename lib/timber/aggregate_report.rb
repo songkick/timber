@@ -23,6 +23,12 @@ module Timber
       output_table = []
       output_table << column_titles
       group = @table.group_by(:columns => @key)
+      row = [["(all)"]*@key.length]
+      @generate_columns.each do |column_value_type, _|
+        r = generate_value_from_table(@table, column_value_type)
+        row << r
+      end
+      output_table << row
       group.each do |key, sub_table|
         row = []
         row << key

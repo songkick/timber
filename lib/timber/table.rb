@@ -116,8 +116,10 @@ module Timber
             fout.puts new_bits.join(",")
           end
         end
-        new_column_types = []
-        ixes.each {|ix| new_column_types << column_types[ix]}
+        if column_types
+          new_column_types = []
+          ixes.each {|ix| new_column_types << column_types[ix]}
+        end
       elsif block_given?
         File.open(next_file, "w") do |fout|
           each_row_from(source) do |row|
@@ -129,7 +131,9 @@ module Timber
         raise "sub_table needs :columns or a predicate block"
       end
       new_table = Table.new(new_file_stream, column_names)
-      new_table.set_types(new_column_types)
+      if column_types
+        new_table.set_types(new_column_types)
+      end
       new_table
     end
     
