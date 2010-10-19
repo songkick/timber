@@ -64,7 +64,10 @@ module Timber
         Stats.deviation(measures)
       when :variance
         Stats.variance(measures)
-      when :apdex
+      when :apdex_ms
+        apdex(measures, 500)
+      when :apdex_s
+        apdex(measures, 0.5)
       else
         if column_value_type.is_a?(Array) and column_value_type.first == :decile
           decile = column_value_type.last
@@ -74,5 +77,19 @@ module Timber
         end
       end
     end
+    
+    def apdex(values, n)
+      num_under_n  = 0
+      num_under_4n = 0
+      values.each do |val|
+        if val <= n
+          num_under_n += 1
+        elsif val <= 4*n
+          num_under_4n += 1
+        end
+      end
+      (num_under_n.to_f + 0.5*num_under_4n.to_f)/values.length
+    end
+    
   end
 end
