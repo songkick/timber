@@ -1,6 +1,34 @@
 
 module Timber
   class AggregateReport
+    
+    HTML_PREAMBLE = <<-HTML
+<html>
+  <head>
+    <link rel="stylesheet" href="/public/css//blueprint/screen.css" type="text/css" media="screen, projection">
+    <style>
+      td {
+        text-align: right;
+      }
+      tr {
+        border: 1px solid gray;
+      }
+      th {
+        text-align: right;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <br />
+HTML
+
+    HTML_POSTAMBLE = <<-HTML
+    </div>
+  </body>
+</html>
+HTML
+
     def initialize(name, options)
       @name             = name
       @dir              = options.delete(:dir)
@@ -8,6 +36,7 @@ module Timber
       @key              = options.delete(:key)
       @value_column     = options.delete(:value)
       @table            = options.delete(:table)
+      @sort_column      = options.delete(:sort_column)
       @generate_columns = options.delete(:generate_columns)
     end
     
@@ -20,25 +49,47 @@ module Timber
     end
     
     def generate_csv(filename)
-      output_table = []
-      output_table << column_titles
-      group = @table.group_by(:columns => @key)
-      row = [["(all)"]*@key.length]
-      @generate_columns.each do |column_value_type, _|
-        r = generate_value_from_table(@table, column_value_type)
-        row << r
-      end
-      output_table << row
-      group.each do |key, sub_table|
-        row = []
-        row << key
+      File.open(filename, "w") {|fout| output_table.each {|row| fout.puts row.join(",")}}
+    end
+    
+    def generate_html(filename)
+      str = ""
+      str << HTML_PREAMBLE
+      str << "<h3>#{title}</h3>"
+      str << output_table.sort_rows_by("total time (#{units})", :order => :descending).to_html
+      str << HTML_POSTAMBLE
+    end
+    
+    def output_table
+      @output_table ||= begin
+        result = []
+        group = @table.group_by(:columns => @key)
+        group.each do |key, sub_table|
+          row = []
+          row << key
+          @generate_columns.each do |column_value_type, _|
+            r = generate_value_from_table(sub_table, column_value_type)
+            row << r
+          end
+          result << row.flatten
+        end
+        if @sort_column
+          result = result.sort_by do |row|
+            col = 
+              @generate_columns.map {|column_value_type, _| column_value_type}.index(@sort_column) + 
+              @key.length
+            v = row[col].to_f
+            v
+          end.reverse
+        end
+        row = [["(all)"]*@key.length]
         @generate_columns.each do |column_value_type, _|
-          r = generate_value_from_table(sub_table, column_value_type)
+          r = generate_value_from_table(@table, column_value_type)
           row << r
         end
-        output_table << row
+        result = [column_titles, row, *result]
+        result
       end
-      File.open(filename, "w") {|fout| output_table.each {|row| fout.puts row.join(",")}}
     end
     
     def column_titles

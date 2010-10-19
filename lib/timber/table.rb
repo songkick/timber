@@ -179,6 +179,17 @@ module Timber
       ix
     end
     
+    def self.cast_value(value, type)
+      case type
+      when :string
+        value
+      when :int
+        value.to_i
+      when :float
+        value.to_f
+      end
+    end
+    
     def each_row_from(file)
       File.open(file) do |from|
         while line = from.gets
@@ -186,14 +197,7 @@ module Timber
           if column_types
             typed_bits = []
             bits.zip(column_types) do |bit, type|
-              case type
-              when :string
-                typed_bits << bit
-              when :int
-                typed_bits << bit.to_i
-              when :float
-                typed_bits << bit.to_f
-              end
+              typed_bits << Table.cast_value(bit, type)
             end
             yield typed_bits
           else

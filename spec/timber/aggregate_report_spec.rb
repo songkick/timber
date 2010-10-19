@@ -16,11 +16,12 @@ describe Timber::AggregateReport do
       
       Timber::AggregateReport.new(
         "Action breakdown for last hour",
-        :dir    => "#{working_dir}/reports/skweb",
-        :file   => "_last_hour",
-        :key    => [:controller, :action],
-        :value  => :duration_ms,
-        :table  => @table,
+        :dir          => "#{working_dir}/reports/skweb",
+        :file         => "_last_hour",
+        :key          => [:controller, :action],
+        :value        => :duration_ms,
+        :table        => @table,
+        :sort_column  => :total,
         :generate_columns => [
           [:count     , "Count"],
           [:mean      , "Mean (ms)"],
@@ -41,12 +42,12 @@ describe Timber::AggregateReport do
     end
     
     it "the csv file should contain the correct data" do
-      File.readlines(csv_filename).map {|line| line.chomp.split(",")}.sort.should == [
+      File.readlines(csv_filename).map {|line| line.chomp.split(",")}.should == [
+        ["controller", "action", "Count", "Mean (ms)", "Median (ms)", "Deviation (ms)", "Total time (ms)", "Apdex"],
         ["(all)", "(all)", "4", "344.5", "235.0", "304.618203658284", "1378", "0.875"],
         ["artists", "show", "1", "856.0", "856.0", "0.0", "856", "0.5"],
-        ["controller", "action", "Count", "Mean (ms)", "Median (ms)", "Deviation (ms)", "Total time (ms)", "Apdex"],
-        ["users", "show", "1", "52.0", "52.0", "0.0", "52", "1.0"],
-        ["venues", "show", "2", "235.0", "235.0", "0.0", "470", "1.0"]
+        ["venues", "show", "2", "235.0", "235.0", "0.0", "470", "1.0"],
+        ["users", "show", "1", "52.0", "52.0", "0.0", "52", "1.0"]
       ]
     end
   end
