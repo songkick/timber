@@ -49,7 +49,7 @@ module Timber
     end
     
     def ssh_cmd(cmd)
-      "ssh #{user}@#{server} \"nice #{escaped_cmd(cmd)}\""
+      "ssh #{user}@#{server} \"#{escaped_cmd(cmd)}\""
     end
     
     def escaped_cmd(cmd)
@@ -57,7 +57,7 @@ module Timber
     end
     
     def ruby_command(ruby)
-      "nice ruby -e \"#{escape_quotes(ruby)}\""
+      "ruby -e \"#{escape_quotes(ruby)}\""
     end
         
     def user

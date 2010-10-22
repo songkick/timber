@@ -17,7 +17,7 @@ describe Timber::AggregateReport do
       Timber::AggregateReport.new(
         "Action breakdown for last hour",
         :dir          => "#{working_dir}/reports/skweb",
-        :file         => "_last_hour",
+        :files        => ["_last_hour"],
         :key          => [:controller, :action],
         :value        => :duration_ms,
         :table        => @table,
@@ -44,10 +44,10 @@ describe Timber::AggregateReport do
     it "the csv file should contain the correct data" do
       File.readlines(csv_filename).map {|line| line.chomp.split(",")}.should == [
         ["controller", "action", "Count", "Mean (ms)", "Median (ms)", "Deviation (ms)", "Total time (ms)", "Apdex"],
-        ["(all)", "(all)", "4", "344.5", "235.0", "304.618203658284", "1378", "0.875"],
-        ["artists", "show", "1", "856.0", "856.0", "0.0", "856", "0.5"],
-        ["venues", "show", "2", "235.0", "235.0", "0.0", "470", "1.0"],
-        ["users", "show", "1", "52.0", "52.0", "0.0", "52", "1.0"]
+        ["(all)", "(all)", "4", "344.5", "235.0", "304.618203658284", "1378", "87.5"],
+        ["artists", "show", "1", "856.0", "856.0", "0.0", "856", "50.0"],
+        ["venues", "show", "2", "235.0", "235.0", "0.0", "470", "100.0"],
+        ["users", "show", "1", "52.0", "52.0", "0.0", "52", "100.0"]
       ]
     end
   end

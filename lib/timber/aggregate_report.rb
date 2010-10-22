@@ -32,7 +32,7 @@ HTML
     def initialize(name, options)
       @name             = name
       @dir              = options.delete(:dir)
-      @file             = options.delete(:file)
+      @files            = options.delete(:files)
       @key              = options.delete(:key)
       @value_column     = options.delete(:value)
       @table            = options.delete(:table)
@@ -44,10 +44,11 @@ HTML
       unless File.exist?(@dir)
         FileUtils.mkdir_p(@dir)
       end
-      filename = @dir +"/" + @file + ".csv"
-      generate_csv(filename)
-      filename = @dir +"/" + @file + ".html"
-      generate_html(filename)
+      
+      @files.each do |file|
+        generate_csv(@dir +"/" + file + ".csv")
+        generate_html(@dir +"/" + file + ".html")
+      end
     end
     
     def generate_csv(filename)
