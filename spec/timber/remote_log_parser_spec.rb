@@ -44,6 +44,13 @@ describe Timber::RemoteLogParser do
     end
   end
   
+  describe "logfile looking" do
+    it "should let you look in the original log files" do
+      @remote_log_parser.look("Sep 12 13:1")
+      @remote_log_parser.file_stream.length.should == 2
+    end
+  end
+  
   describe "extraction" do
     it "should let you extract regex groups into a local table" do
       @remote_log_parser.grep("Completed")

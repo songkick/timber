@@ -17,6 +17,12 @@ def remove_working_dir
   FileUtils.rm_r(working_dir)
 end
 
+require 'rbconfig'
+
+if Config::CONFIG["arch"] =~ /darwin/
+  Timber::RemoteLogParser.posix_type = :bsd
+end
+
 Spec::Runner.configure do |config|
   config.before(:each) do
     create_working_dir

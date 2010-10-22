@@ -44,7 +44,7 @@ module Timber
     
     private
     
-    def escape_quotes(string)
+    def self.escape_quotes(string)
       string.gsub("\\", "\\\\\\\\").gsub("\"", "\\\"")
     end
     
@@ -53,11 +53,11 @@ module Timber
     end
     
     def escaped_cmd(cmd)
-      escape_quotes(cmd)
+      RemoteExecutor.escape_quotes(cmd)
     end
     
     def ruby_command(ruby)
-      "ruby -e \"#{escape_quotes(ruby)}\""
+      "ruby -e \"#{RemoteExecutor.escape_quotes(ruby)}\""
     end
         
     def user

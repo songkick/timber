@@ -1,6 +1,14 @@
 
 module Timber
   class RemoteLogParser
+    def self.posix_type=(val)
+      @posix_type = val
+    end
+    
+    def self.posix_type
+      @posix_type || :linux
+    end
+
     attr_reader :server, :file_glob, :file_stream
     
     # file_glob should be an absolute path.
@@ -38,6 +46,13 @@ module Timber
       local_destination_file = file_stream.next_file
       executor.scp(destination_file, local_destination_file)
       Table.new(file_stream, column_names)
+    end
+    
+    def look(prefix)
+      source_files, destination_file = source_and_destination
+      options = RemoteLogParser.posix_type == :linux ? " -b " : ""
+      cmd = "look #{options} \"#{RemoteExecutor.escape_quotes(prefix)}\" #{source_files} > #{destination_file}"
+      executor.ssh(cmd)
     end
     
     def parsed_original_files?
