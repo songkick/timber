@@ -79,6 +79,13 @@ describe Timber::Table do
       ["Sep 13 09:00", 235, "venues", "show", "http://www.songkick.com/venue/o2-academy"]
     ]
   end
+  
+  it "let's you create a table with the file_stream from another table" do
+    fn = @table.current_file
+    new_table = Timber::Table.new_from_file("localhost", fn, working_dir, @table.column_names)
+    new_table.column_names.should == @table.column_names
+    new_table.length.should == @table.length
+  end
 end
 
 

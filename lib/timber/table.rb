@@ -3,6 +3,13 @@ module Timber
   class Table
     attr_reader :column_names, :file_stream, :column_types
     
+    def self.new_from_file(server, filename, working_dir, column_names)
+      executor = RemoteExecutor.new(server)
+      fs = FileStream.new(executor, working_dir)
+      fs.force_current(filename)
+      new(fs, column_names)
+    end
+    
     def initialize(file_stream, column_names)
       @file_stream  = file_stream
       @column_names = column_names
