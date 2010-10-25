@@ -42,6 +42,12 @@ describe Timber::RemoteLogParser do
       @remote_log_parser.grep("saleandro")
       @remote_log_parser.file_stream.length.should == 1
     end
+    
+    it "should clean up any temporary files" do
+      @remote_log_parser.grep("saleandro")
+      @remote_log_parser.clean
+      Dir[working_dir + "/*.tmp"].length.should == 0
+    end
   end
   
   describe "logfile looking" do

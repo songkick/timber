@@ -42,10 +42,10 @@ module Timber
       source_file, destination_file = source_and_destination
       ruby = "fin = File.open(\"#{source_file}\"); while line = (fin.readline rescue nil); match = /#{pattern.source}/.match(line); if match; puts match.captures.join(\",\"); end; end"
       executor.ruby_into(ruby, destination_file)
-      file_stream = FileStream.new(RemoteExecutor.new("localhost"), local_working_dir)
-      local_destination_file = file_stream.next_file
+      new_file_stream = FileStream.new(RemoteExecutor.new("localhost"), local_working_dir)
+      local_destination_file = new_file_stream.next_file
       executor.scp(destination_file, local_destination_file)
-      Table.new(file_stream, column_names)
+      Table.new(new_file_stream, column_names)
     end
     
     def look(prefix)
@@ -65,6 +65,12 @@ module Timber
     
     def all_zipped_files?
       files.all? {|fn| fn =~ /gz$/}
+    end
+    
+    def clean
+      file_stream.files.each do |fn|
+        executor.ssh("rm #{fn}")
+      end
     end
     
     private

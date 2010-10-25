@@ -1,7 +1,7 @@
 
 module Timber
   class FileStream
-    attr_reader :executor, :working_dir
+    attr_reader :executor, :working_dir, :files
     
     class EmptyError < StandardError; end
     
