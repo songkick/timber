@@ -17,7 +17,7 @@ module Timber
         text-align: right;
       }
     </style>
-    <script src="/javascript/sortable.js"></script>
+    <script src="/javascript/sorttable.js"></script>
   </head>
   <body>
     <div class="container">
