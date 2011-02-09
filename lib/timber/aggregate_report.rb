@@ -5,7 +5,7 @@ module Timber
     HTML_PREAMBLE = <<-HTML
 <html>
   <head>
-    <link rel="stylesheet" href="/public/css/screen.css" type="text/css" media="screen, projection">
+    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection">
     <style>
       td {
         text-align: right;
@@ -17,7 +17,7 @@ module Timber
         text-align: right;
       }
     </style>
-    <script src="/public/javascript/sortable.js"></script>
+    <script src="/javascript/sortable.js"></script>
   </head>
   <body>
     <div class="container">
