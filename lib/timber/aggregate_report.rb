@@ -5,7 +5,7 @@ module Timber
     HTML_PREAMBLE = <<-HTML
 <html>
   <head>
-    <link rel="stylesheet" href="/public/css//blueprint/screen.css" type="text/css" media="screen, projection">
+    <link rel="stylesheet" href="/public/css/screen.css" type="text/css" media="screen, projection">
     <style>
       td {
         text-align: right;
@@ -17,6 +17,7 @@ module Timber
         text-align: right;
       }
     </style>
+    <script src="/public/javascript/sortable.js"></script>
   </head>
   <body>
     <div class="container">
@@ -59,17 +60,20 @@ HTML
       str = ""
       str << HTML_PREAMBLE
       str << "<h3>#{@name}</h3><br />\n"
-      str << "<table>\n"
+      str << "<table class='sortable'>\n"
       output_table.each_with_index do |row, row_i|
+        str << "<thead>" if row_i == 0
         str << "<tr>"
+        cell = (row_i == 0 ? "th" : "td")
         row.each_with_index do |bit, i|
           if row_i == 0
-            str << "<td>#{bit}</td>\n"
+            str << "<#{cell}>#{bit}</#{cell}>\n"
           else
-            str << "<td>#{value_to_string(bit, i)}</td>\n"
+            str << "<#{cell}>#{value_to_string(bit, i)}</#{cell}>\n"
           end
         end
         str << "</tr>\n"
+        str << "</thead>" if row_i == 0
       end
       str << "</table>"
       str << HTML_POSTAMBLE
